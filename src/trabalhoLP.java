@@ -18,7 +18,7 @@ public class trabalhoLP {
         for (int i = 0; i < nonTerminalSimbol.size(); i++) {
             String simbol = nonTerminalSimbol.get(i);
             List<String> follow = createFollow(nonTerminalSimbol.get(i), grammar);
-            List<String> first = geraFirst(nonTerminalSimbol.get(i), grammar);
+            List<String> first = createFirst(nonTerminalSimbol.get(i), grammar);
             FFtable.add(new FirstFollowTable(simbol, first, follow));
         }
 
@@ -44,7 +44,7 @@ public class trabalhoLP {
         }        
     }
     
-    public  List<String> geraFirst(String simbol, Grammar[] grammar){
+    public  List<String> createFirst(String simbol, Grammar[] grammar){
         List<String> first = new ArrayList<String>();
         for (int i = 0; i < grammar.length; i++) {
 
@@ -53,7 +53,7 @@ public class trabalhoLP {
                     first.add(grammar[i].getProd().substring(0, 1));
                 }
                 else if(Character.isUpperCase(grammar[i].getProd().charAt(0))){
-                    List<String> aux = geraFirst(Character.toString(grammar[i].getProd().charAt(0)), grammar);
+                    List<String> aux = createFirst(Character.toString(grammar[i].getProd().charAt(0)), grammar);
                     for (int j = 0; j < aux.size(); j++) {
                         first.add(aux.get(j));
                     }
