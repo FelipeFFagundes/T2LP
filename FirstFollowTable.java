@@ -3,17 +3,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FirstFollowTable{
-    private String simbol;
+    private String simbolo;
     private String[] first;
-    private String[] follow;
+    private String[] follow;        
 
-    public FirstFollowTable(String simbol, List<String> first, List<String> follow){
-        this.simbol = simbol;
+    public FirstFollowTable(String simbolo, List<String> first, List<String> follow){
+        this.simbolo = simbolo;
         this.first = first.toArray(new String[first.size()]);
         this.follow = follow.toArray(new String[follow.size()]);
     }
-    public String getSimbol(){
-        return this.simbol;
+    public String getSimbolo(){
+        return this.simbolo;
     }
     public String[] getFirst(){
         return this.first;
@@ -23,6 +23,6 @@ public class FirstFollowTable{
     }
     @Override
     public String toString() {
-        return "FirstFollowTable:  Símbolo Não terminal: " + simbol + "    First: " + Arrays.toString(first) + "    Follow: " + Arrays.toString(follow) + "";
+        return "TabelaFirstFollow:  Símbolo Não terminal: " + simbolo + "    First: " + Arrays.toString(first) + "    Follow: " + Arrays.toString(follow) + "";
     }
 }
