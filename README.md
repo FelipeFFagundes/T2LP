@@ -3,7 +3,6 @@
 Trabalho desenvolvido por:
 - `Arthur Viegas`
 - `Felipe Fagundes`
-- `Flavia Webster`
 - `Pedro Fonseca`
 - `Israel Garcia`
 

@@ -11,9 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class trabalhoLP {  
-    ArrayList<String> simbolosTerminais = new ArrayList();
-    ArrayList<String> simbolosNaoTerminais = new ArrayList();
-    ArrayList<TabelaFirstFollow> tabelaFF = new ArrayList();
+    static ArrayList<String> simbolosTerminais = new ArrayList();
+    static ArrayList<String> simbolosNaoTerminais = new ArrayList();
+    ArrayList<TabelaFirstFollow> tabelaFirstFollow = new ArrayList();
 
     public class Gramatica{
         private String simbolo;
@@ -34,7 +34,7 @@ public class trabalhoLP {
 
         @Override
         public String toString() {
-            return simbolo + " -> " + producao;
+            return "    " + simbolo + " -> " + producao;
         }
     }
 
@@ -64,17 +64,13 @@ public class trabalhoLP {
             return this.follow;
         }
 
-        @Override
-        public String toString() {
-            return "TabelaFirstFollow:  Símbolo Não terminal: " + simbolo + "    First: " + Arrays.toString(first) + "    Follow: " + Arrays.toString(follow) + "";
-        }
     }
 
 
 
 
 
-    private void manipulaGLL(String linha) {
+    private static void manipulaGLL(String linha) {
 
 
         for (int i = 0; i < linha.length(); i++) {
@@ -102,12 +98,15 @@ public class trabalhoLP {
             List<String> first = geraFirst(simbolosNaoTerminais.get(i), gramatica);
             List<String> follow = geraFollow(simbolosNaoTerminais.get(i), gramatica);
 
-            tabelaFF.add(new TabelaFirstFollow(simbolo, first, follow));
+            tabelaFirstFollow.add(new TabelaFirstFollow(simbolo, first, follow));
         }
+        System.out.println("========================================================");
+        System.out.println("|   SIMBOLO    |      FIRST         FOLLOW    ");
 
-        System.out.println("\nTabela First Follow: \n");
-        for (int i = 0; i < tabelaFF.size(); i++) {
-            System.out.println(tabelaFF.get(i).getSimbolo() + " - " + Arrays.toString(tabelaFF.get(i).getFirst()) + " - " + Arrays.toString(tabelaFF.get(i).getFollow()));
+        for (int i = 0; i < tabelaFirstFollow.size(); i++) {
+            System.out.println("|      "+tabelaFirstFollow.get(i).getSimbolo() + "       |     " 
+            + Arrays.toString(tabelaFirstFollow.get(i).getFirst()) + "          " 
+            + Arrays.toString(tabelaFirstFollow.get(i).getFollow()));
         }
     }
 
@@ -118,9 +117,13 @@ public class trabalhoLP {
         List<String> first = new ArrayList<String>();
         for (int i = 0; i < gramatica.length; i++) {
             if(gramatica[i].getSimbolo().equals(simbolo) ){
+
+
                 if(Character.isLowerCase(gramatica[i].getProducao().charAt(0))){
                     first.add(gramatica[i].getProducao().substring(0, 1));
                 }
+
+
                 else if(Character.isUpperCase(gramatica[i].getProducao().charAt(0))){
                     List<String> aux = geraFirst(Character.toString(gramatica[i].getProducao().charAt(0)), gramatica);
                     for (int j = 0; j < aux.size(); j++) {
@@ -193,8 +196,10 @@ public class trabalhoLP {
 
 
     public static void main(String args[]) throws IOException {
-        System.out.println("\n======================================================");
-        System.out.println("Favor escrever a linguagem no arquivo exemploTeste.txt");
+        System.out.println("========================================================");
+        System.out.println("|Favor escrever a linguagem no arquivo exemploTeste.txt|");
+        System.out.println("========================================================");
+
 
         File arquivo = new File("exemploTeste.txt");
         trabalhoLP analisadorPreditivo = new trabalhoLP();
@@ -203,29 +208,25 @@ public class trabalhoLP {
         try{
             Reader reader = new FileReader(arquivo);
 		    BufferedReader bufferReader = new BufferedReader(reader);
-		    String ggl;
+		    String leitor;
 		
-		    while((ggl = bufferReader.readLine()) != null){		
-			    valores.add(ggl);						
+		    while((leitor = bufferReader.readLine()) != null){		
+			    valores.add(leitor);						
 		    }				
 		
 		    reader.close();
 		    bufferReader.close();
 
         } catch (FileNotFoundException e) {
-            System.out.println("Arquivo não encontrado");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("Erro ao ler o arquivo");
-            e.printStackTrace();
+            System.out.println("404");
         }
         
 
         for (int i = 0; i < valores.size(); i++) {
-            analisadorPreditivo.manipulaGLL(valores.get(i));                
+            manipulaGLL(valores.get(i));                
         }
-        System.out.println("Simbolos Terminais: " + analisadorPreditivo.simbolosTerminais+"\n");
-        System.out.println("Simbolos Não Terminais: " + analisadorPreditivo.simbolosNaoTerminais+"\n");
+
+        
 
 
         Gramatica [] g = new Gramatica[valores.size()]; 
@@ -233,13 +234,20 @@ public class trabalhoLP {
             g[i] = analisadorPreditivo.new Gramatica(valores.get(i).substring(0, 1), valores.get(i).substring(2));
         }
 
-        System.out.println("\nGramática:\n");
+        System.out.println("|Produções:");
         for (int i = 0; i < g.length; i++) {
-            System.out.println(g[i]);
+            System.out.println("|" + g[i]);
         }
+        System.out.println("========================================================");
+
+
+        System.out.println("|Simbolos Não Terminais: \n|    " + simbolosNaoTerminais);
+        System.out.println("|Simbolos Terminais: \n|    " + simbolosTerminais);
+        System.out.println("========================================================");
+
 
         analisadorPreditivo.geraTabelaFirstFollow(g);
-        System.out.println();
+        System.out.println("=====================FIM DO PROGRAMA====================\n");
 
     }      
 }

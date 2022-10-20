@@ -1,5 +1,6 @@
 S-aaSaa
 S-A
 A-bB
+A-+
 B-cBc
 B-c
