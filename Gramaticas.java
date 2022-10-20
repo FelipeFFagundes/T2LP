@@ -1,9 +1,9 @@
 package T2LP;
-public class Gramatica{
+public class Gramaticas{
     private String simbol;
     private String prod;
 
-    public Gramatica(String simbol, String prod){
+    public Gramaticas(String simbol, String prod){
         this.simbol = simbol;
         this.prod = prod;
     }
