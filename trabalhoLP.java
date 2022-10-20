@@ -11,13 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class trabalhoLP {  
-    ArrayList<String> terminalSimbol = new ArrayList<String>();
-    ArrayList<String> nonTerminalSimbol = new ArrayList<String>();
-    ArrayList<FirstFollowTable> FFtable = new ArrayList<FirstFollowTable>();
+    static ArrayList<String> terminalSimbol = new ArrayList<String>();
+    static ArrayList<String> nonTerminalSimbol = new ArrayList<String>();
+    static ArrayList<FirstFollowTable> FFtable = new ArrayList<FirstFollowTable>();
 
 
     //Método para criar a tabela de first e follow
-    public void createFirstFollowTable(Gramatica [] grammar){
+    public static void createFirstFollowTable(Gramatica [] grammar){
        
         for (int i = 0; i < nonTerminalSimbol.size(); i++) {
             String simbol = nonTerminalSimbol.get(i);
@@ -35,9 +35,10 @@ public class trabalhoLP {
 
 
 
-    private void GLLEditor(String line) {
+    public static void GLLEditor(String line) {//Recebe uma linha do arquivo de teste
         
-        for (int i = 0; i < line.length(); i++) {
+        for (int i = 0; i < line.length(); i++) {//Percorre cada linha
+
             if(Character.isUpperCase(line.charAt(i)) && nonTerminalSimbol.contains(line.substring(i, i + 1)) == false && line.charAt(i) != 'E'){
                 nonTerminalSimbol.add(line.substring(i, i+1));
             }
@@ -52,8 +53,9 @@ public class trabalhoLP {
     
 
 
-    public List<String> createFirst(String simbol, Gramatica[] grammar){
+    public static List<String> createFirst(String simbol, Gramatica[] grammar){
         List<String> first = new ArrayList<String>();
+
         for (int i = 0; i < grammar.length; i++) {
 
             if(grammar[i].getSimbol().equals(simbol) ){
@@ -75,7 +77,7 @@ public class trabalhoLP {
 
     }
 
-    public List<String> createFollow(String simbol, Gramatica[] gramaticas){
+    public static List<String> createFollow(String simbol, Gramatica[] gramaticas){
 
         List<String> follow = new ArrayList<String>();
 
@@ -107,7 +109,7 @@ public class trabalhoLP {
         System.out.println("Para a funcionalidade do programa a Linguagem deve ser inserida dentro do arquivo 'exemploTeste'");
         
         File file = new File("T2LP/exemploTeste");
-        trabalhoLP LP = new trabalhoLP();
+
         List<String> valores = new ArrayList<String>();
         Reader reader = new FileReader(file);
         BufferedReader bufferReader = new BufferedReader(reader);
@@ -125,11 +127,11 @@ public class trabalhoLP {
         } catch (FileNotFoundException e) { System.out.println("File not found"); }
 
         for (int i = 0; i < valores.size(); i++) {
-            LP.GLLEditor(valores.get(i));                
+            GLLEditor(valores.get(i));                
         }
 
-        System.out.println(" Simbolos Não Terminais: " + LP.nonTerminalSimbol);
-        System.out.println(" Simbolos Terminais: " + LP.terminalSimbol);
+        System.out.println(" Simbolos Não Terminais: " + nonTerminalSimbol);
+        System.out.println(" Simbolos Terminais: " + terminalSimbol);
 
         Gramatica [] gramatica = new Gramatica[valores.size()]; 
 
@@ -137,11 +139,18 @@ public class trabalhoLP {
             gramatica[i] = new Gramatica(valores.get(i).substring(0, 1), valores.get(i).substring(2));
         }
 
+        //Printa cada objeto da gramatica
+        //Exemplo A é um objeto da gramatica que produz bB
         for (int i = 0; i < gramatica.length; i++) {
             System.out.println(gramatica[i]);
         }
 
-        LP.createFirstFollowTable(gramatica);  
+
+
+
+
+
+        createFirstFollowTable(gramatica);  
       
 
         reader.close();
