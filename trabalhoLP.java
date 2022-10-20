@@ -11,9 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class trabalhoLP {  
-    static ArrayList<String> simbolosTerminais = new ArrayList();
-    static ArrayList<String> simbolosNaoTerminais = new ArrayList();
-    ArrayList<TabelaFirstFollow> tabelaFirstFollow = new ArrayList();
+    static ArrayList<String> simbolosTerminais = new ArrayList<>();
+    static ArrayList<String> simbolosNaoTerminais = new ArrayList<>();
+    ArrayList<TabelaFirstFollow> tabelaFirstFollow = new ArrayList<>();
 
     public class Gramatica{
         private String simbolo;
@@ -37,10 +37,7 @@ public class trabalhoLP {
             return "    " + simbolo + " -> " + producao;
         }
     }
-
-
-
-    
+   
     public class TabelaFirstFollow{
         private String simbolo;
         private String[] first;
@@ -67,9 +64,6 @@ public class trabalhoLP {
     }
 
 
-
-
-
     private static void manipulaGLL(String linha) {
 
 
@@ -85,12 +79,6 @@ public class trabalhoLP {
             }                
         }            
     }
-
-    
-
-
-
-
 
     public void geraTabelaFirstFollow(Gramatica [] gramatica){       
         for (int i = 0; i < simbolosNaoTerminais.size(); i++) {
@@ -193,17 +181,15 @@ public class trabalhoLP {
     }
 
     
-
-
     public static void main(String args[]) throws IOException {
         System.out.println("========================================================");
         System.out.println("|Favor escrever a linguagem no arquivo exemploTeste.txt|");
         System.out.println("========================================================");
 
 
-        File arquivo = new File("exemploTeste.txt");
+        File arquivo = new File("T2LP/exemploTeste.txt");
         trabalhoLP analisadorPreditivo = new trabalhoLP();
-        List<String> valores = new ArrayList<String>();    
+        List<String> linha = new ArrayList<String>();    
 
         try{
             Reader reader = new FileReader(arquivo);
@@ -211,7 +197,7 @@ public class trabalhoLP {
 		    String leitor;
 		
 		    while((leitor = bufferReader.readLine()) != null){		
-			    valores.add(leitor);						
+			    linha.add(leitor);						
 		    }				
 		
 		    reader.close();
@@ -222,16 +208,16 @@ public class trabalhoLP {
         }
         
 
-        for (int i = 0; i < valores.size(); i++) {
-            manipulaGLL(valores.get(i));                
+        for (int i = 0; i < linha.size(); i++) {
+            manipulaGLL(linha.get(i));                
         }
 
         
 
 
-        Gramatica [] g = new Gramatica[valores.size()]; 
-        for (int i = 0; i < valores.size(); i++) {
-            g[i] = analisadorPreditivo.new Gramatica(valores.get(i).substring(0, 1), valores.get(i).substring(2));
+        Gramatica [] g = new Gramatica[linha.size()]; 
+        for (int i = 0; i < linha.size(); i++) {
+            g[i] = analisadorPreditivo.new Gramatica(linha.get(i).substring(0, 1), linha.get(i).substring(2));
         }
 
         System.out.println("|Produções:");
