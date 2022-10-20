@@ -11,82 +11,33 @@ import java.util.Arrays;
 import java.util.List;
 
 public class trabalhoLP {  
-    static ArrayList<String> simbolosTerminais = new ArrayList<>();
-    static ArrayList<String> simbolosNaoTerminais = new ArrayList<>();
-    ArrayList<TabelaFirstFollow> tabelaFirstFollow = new ArrayList<>();
+    static ArrayList<String> terminalSymbol = new ArrayList<>();
+    static ArrayList<String> nonTerminalSymbol = new ArrayList<>();
+    static ArrayList<FirstFollowTable> tabelaFirstFollow = new ArrayList<>();
 
-    public class Gramatica{
-        private String simbolo;
-        private String producao;
-
-        public Gramatica(String simbolo, String producao){
-            this.simbolo = simbolo;
-            this.producao = producao;
-        }
-
-        public String getSimbolo(){
-            return this.simbolo;
-        }
-
-        public String getProducao(){
-            return this.producao;
-        }
-
-        @Override
-        public String toString() {
-            return "    " + simbolo + " -> " + producao;
-        }
-    }
-   
-    public class TabelaFirstFollow{
-        private String simbolo;
-        private String[] first;
-        private String[] follow;        
-
-        public TabelaFirstFollow(String simbolo, List<String> first, List<String> follow){
-            this.simbolo = simbolo;
-            this.first = first.toArray(new String[first.size()]);
-            this.follow = follow.toArray(new String[follow.size()]);
-        }
-
-        public String getSimbolo(){
-            return this.simbolo;
-        }
-
-        public String[] getFirst(){
-            return this.first;
-        }
-
-        public String[] getFollow(){
-            return this.follow;
-        }
-
-    }
-
-
-    private static void manipulaGLL(String linha) {
-
+    private static void GLLEditor(String linha) {
 
         for (int i = 0; i < linha.length(); i++) {
-            if(Character.isUpperCase(linha.charAt(i)) && simbolosNaoTerminais.contains(linha.substring(i, i+1))==false && linha.charAt(i) != 'E'){
-                simbolosNaoTerminais.add(linha.substring(i, i+1));
+            if(Character.isUpperCase(linha.charAt(i)) && nonTerminalSymbol.contains(linha.substring(i, i+1))==false && linha.charAt(i) != 'E'){
+                nonTerminalSymbol.add(linha.substring(i, i+1));
             }
-            else if (Character.isLowerCase(linha.charAt(i)) && simbolosTerminais.contains(linha.substring(i, i+1))==false){
-                simbolosTerminais.add(linha.substring(i, i+1));
+            else if (Character.isLowerCase(linha.charAt(i)) && terminalSymbol.contains(linha.substring(i, i+1))==false){
+                terminalSymbol.add(linha.substring(i, i+1));
             }
-            else if (!Character.isLetter(linha.charAt(i)) && linha.charAt(i) != '-' && linha.charAt(i) != 'E' && simbolosTerminais.contains(linha.substring(i, i+1))==false){
-                 simbolosTerminais.add(linha.substring(i, i+1));
+            else if (!Character.isLetter(linha.charAt(i)) && linha.charAt(i) != '-' && linha.charAt(i) != 'E' && terminalSymbol.contains(linha.substring(i, i+1))==false){
+                 terminalSymbol.add(linha.substring(i, i+1));
             }                
         }            
     }
 
-    public void geraTabelaFirstFollow(Gramatica [] gramatica){       
-        for (int i = 0; i < simbolosNaoTerminais.size(); i++) {
-            String simbolo = simbolosNaoTerminais.get(i);
-            List<String> first = geraFirst(simbolosNaoTerminais.get(i), gramatica);
-            List<String> follow = geraFollow(simbolosNaoTerminais.get(i), gramatica);
+    public static void generateFirstFollowTable(Gramaticas [] gramatica){       
+        for (int i = 0; i < nonTerminalSymbol.size(); i++) {
+            String simbolo = nonTerminalSymbol.get(i);
+            List<String> first = generateFirst(nonTerminalSymbol.get(i), gramatica);
+            List<String> follow = generateFollow(nonTerminalSymbol.get(i), gramatica);
 
-            tabelaFirstFollow.add(new TabelaFirstFollow(simbolo, first, follow));
+
+            tabelaFirstFollow.add(new FirstFollowTable(simbolo, first, follow));
         }
         System.out.println("========================================================");
         System.out.println("|   SIMBOLO    |      FIRST         FOLLOW    ");
@@ -101,7 +52,7 @@ public class trabalhoLP {
 
 
 
-    public  List<String> geraFirst(String simbolo, Gramatica[] gramatica){
+    public static  List<String> generateFirst(String simbolo, Gramaticas[] gramatica){
         List<String> first = new ArrayList<String>();
         for (int i = 0; i < gramatica.length; i++) {
             if(gramatica[i].getSimbolo().equals(simbolo) ){
@@ -113,7 +64,7 @@ public class trabalhoLP {
 
 
                 else if(Character.isUpperCase(gramatica[i].getProducao().charAt(0))){
-                    List<String> aux = geraFirst(Character.toString(gramatica[i].getProducao().charAt(0)), gramatica);
+                    List<String> aux = generateFirst(Character.toString(gramatica[i].getProducao().charAt(0)), gramatica);
                     for (int j = 0; j < aux.size(); j++) {
                         first.add(aux.get(j));
                     }
@@ -126,7 +77,7 @@ public class trabalhoLP {
         return first;
     }
 
-    public List<String> geraFollow(String simbolo, Gramatica[] gramatica){
+    public static List<String> generateFollow(String simbolo, Gramaticas[] gramatica){
         List<String> follow = new ArrayList<String>();
         if (gramatica[0].getSimbolo().equals(simbolo)) {
             follow.add("$");
@@ -135,7 +86,7 @@ public class trabalhoLP {
             for (int j = 0; j < gramatica[i].getProducao().length(); j++) {
                 if (gramatica[i].getProducao().charAt(j) == simbolo.charAt(0)) { 
                     if (j == gramatica[i].getProducao().length()-1) {
-                        List<String> aux = geraFollow(gramatica[i].getSimbolo(), gramatica);
+                        List<String> aux = generateFollow(gramatica[i].getSimbolo(), gramatica);
 
                         for (int k = 0; k < aux.size(); k++) {
                             if(follow.contains(aux.get(k)) == false){
@@ -153,7 +104,7 @@ public class trabalhoLP {
 
                         else{
                             if (Character.isUpperCase(gramatica[i].getProducao().charAt(j+1))) {
-                                List<String> aux = geraFirst(Character.toString(gramatica[i].getProducao().charAt(j+1)), gramatica);
+                                List<String> aux = generateFirst(Character.toString(gramatica[i].getProducao().charAt(j+1)), gramatica);
                                 for (int k = 0; k < aux.size(); k++) {
                                     if (!aux.get(k).equals("E")) {
                                         if(follow.contains(aux.get(k)) == false){
@@ -163,7 +114,7 @@ public class trabalhoLP {
                                 }
                                 if (aux.contains("E")) {
                                     if (!gramatica[i].getSimbolo().equals(simbolo)) {
-                                        List<String> aux2 = geraFollow(gramatica[i].getSimbolo(), gramatica);
+                                        List<String> aux2 = generateFollow(gramatica[i].getSimbolo(), gramatica);
                                         for (int k = 0; k < aux2.size(); k++) {
                                             if(follow.contains(aux2.get(k)) == false){
                                                 follow.add(aux2.get(k));
@@ -188,7 +139,6 @@ public class trabalhoLP {
 
 
         File arquivo = new File("T2LP/exemploTeste.txt");
-        trabalhoLP analisadorPreditivo = new trabalhoLP();
         List<String> linha = new ArrayList<String>();    
 
         try{
@@ -209,15 +159,16 @@ public class trabalhoLP {
         
 
         for (int i = 0; i < linha.size(); i++) {
-            manipulaGLL(linha.get(i));                
+            GLLEditor(linha.get(i));                
         }
 
         
 
+        Gramaticas [] g = new Gramaticas[linha.size()]; 
 
-        Gramatica [] g = new Gramatica[linha.size()]; 
+
         for (int i = 0; i < linha.size(); i++) {
-            g[i] = analisadorPreditivo.new Gramatica(linha.get(i).substring(0, 1), linha.get(i).substring(2));
+            g[i] = new Gramaticas(linha.get(i).substring(0, 1), linha.get(i).substring(2));
         }
 
         System.out.println("|Produções:");
@@ -227,12 +178,15 @@ public class trabalhoLP {
         System.out.println("========================================================");
 
 
-        System.out.println("|Simbolos Não Terminais: \n|    " + simbolosNaoTerminais);
-        System.out.println("|Simbolos Terminais: \n|    " + simbolosTerminais);
+        System.out.println("|Simbolos Não Terminais: \n|    " + nonTerminalSymbol);
+        System.out.println("|Simbolos Terminais: \n|    " + terminalSymbol);
         System.out.println("========================================================");
 
 
-        analisadorPreditivo.geraTabelaFirstFollow(g);
+        generateFirstFollowTable(g);
+
+
+        
         System.out.println("=====================FIM DO PROGRAMA====================\n");
 
     }      
